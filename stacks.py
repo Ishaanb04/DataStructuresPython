@@ -1,50 +1,100 @@
 class Node:
-    def __init__(self, data, next = None):      
-        self.data = data
-        self.next = next
+    def __init__(self, data):
+        self._data = data
+        self._next = None
     
     def get_data(self):
-        return self.data
-
-    def get_next(self):
-        return self.next
+        return self._data
     
-    def set_next(self, link_next):
-        self.next = link_next
+    def get_next(self):
+        return self._next
+
+    def set_next(self, next_node):
+        self._next = next_node
+
+class StackIterator:
+    def __init__(self, top_node):
+        self._current = top_node
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.get_current() == None:
+            raise StopIteration
+        data = self.get_current().get_data()
+        self.set_current(self.get_current().get_next())
+        return data
+    
+    def get_current(self):
+        return self._current
+
+    def set_current(self, new_node):
+        self._current = new_node
 
 class Stack:
     def __init__(self, limit = 1000):
-        self.top_item = None
+        self._top = None
         self.limit = limit
-        self.size = 0
+        self._size = 0
+
+    def __iter__(self):
+        return StackIterator(self.get_top())
+    
+    def __repr__(self):
+        representation = '['
+        current = self.get_top()
+        if current == None:
+            representation += ']'
+        else: 
+            while current.get_next() != None:
+                representation += f'{current.get_data()}, '
+                current = current.get_next()
+            representation += f'{current.get_data()}]'
+        return representation
+        
+    def get_top(self):
+        return self._top
+    
+    def get_size(self):
+        return self._size
+
+    def increase_size(self):
+        self._size += 1
+    
+    def decrease_size(self):
+        self._size -= 1
+
+    def set_top(self, new_node):
+        self._top = new_node
+
+    def is_allowed(self):
+        return self.get_size() < self.limit
 
     def peek(self):
-        if not self.is_empty():
-            return self.top_item.get_data()
-        else:
-            print('Stack is empty')
-
-    def push(self, value):
-        if self.has_space():
-            item = Node(value)
-            item.set_next(self.top_item)
-            self.top_item = item
-            self.size += 1
-        else:
-            print('Stack is already full')
+        return self.get_top().get_data()
+    
+    def is_empty(self):
+        return self.get_size() == 0
+        
+    def push(self, data):
+        new_node = Node(data)
+        if self.is_allowed():
+            if self.get_top() == None:
+                self.set_top(new_node)
+            else:
+                new_node.set_next(self.get_top())
+                self.set_top(new_node)
+            self.increase_size()
+        return self
 
     def pop(self):
-        if not self.is_empty():
-            item = self.top_item
-            self.top_item = item.get_next()
-            self.size -= 1
-            return item.get_data()
-            
+        if self.get_top() == None:
+            print('Stack is Empty')
+            return None
         else:
-            print('Stack is empty!')
+            node = self.get_top()
+            self.set_top(self.get_top().get_next())
+            self.decrease_size()
+            return node.get_data()
     
-    def has_space(self):
-        return self.limit >self.size
-
-    def is_empty(self):
-        return self.size == 0 
