@@ -1,16 +1,4 @@
-class Node:
-    def __init__(self, data):
-        self._data = data
-        self._next = None
-    
-    def get_data(self):
-        return self._data
-    
-    def get_next(self):
-        return self._next
-
-    def set_next(self, next_node):
-        self._next = next_node
+from node import Node
 
 class StackIterator:
     def __init__(self, top_node):
@@ -76,7 +64,7 @@ class Stack:
     
     def is_empty(self):
         return self.get_size() == 0
-        
+
     def push(self, data):
         new_node = Node(data)
         if self.is_allowed():
@@ -97,4 +85,3 @@ class Stack:
             self.set_top(self.get_top().get_next())
             self.decrease_size()
             return node.get_data()
-    

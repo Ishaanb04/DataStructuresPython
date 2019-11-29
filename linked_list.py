@@ -1,18 +1,5 @@
 import math
-
-class Node:
-    def __init__(self, data):
-        self._data = data
-        self._next = None
-    
-    def get_data(self):
-        return self._data
-    
-    def get_next(self):
-        return self._next
-
-    def set_next(self, next_node):
-        self._next = next_node
+from node import Node
 
 class LinkedListIterator:
     def __init__(self, head_node):
@@ -148,8 +135,3 @@ class LinkedList:
                 return (prev.get_data(), slow_pointer.get_data())
             else:
                 return slow_pointer.get_data()
-        
-the_list = LinkedList()
-the_list.add_end(10).add_end(20).add_end(30).add_end(40).add_end(50).add_end(60)
-print(the_list)
-print(the_list.get_middle())
